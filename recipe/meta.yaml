@@ -1,0 +1,47 @@
+{% set name = "openssl" %}
+{% set version = "3.0.8" %}
+{% set provider_version = "3.0.8" %}
+
+package:
+  name: {{ name|lower }}-fips
+  version: {{ version }}zz
+
+source:
+  - git_url: https://github.com/openssl/openssl
+    git_tag: openssl-{{ version }}
+
+build:
+  number: 1
+  no_link:
+    - ssl/fipsmodule.cnf
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - nasm               # [win]
+    - make               # [unix]
+    - perl
+  run:
+    - ca-certificates
+    - openssl
+
+test:
+  requires:
+     - python
+     - {{ compiler('c') }}
+  files:
+     - tests/testfips.c
+
+about:
+  home: https://www.openssl.org/
+  license_file: LICENSE.txt
+  license: Apache-2.0
+  license_family: Apache
+  summary: OpenSSL FIPS Provider
+  description: OpenSSL FIPS Provider
+  dev_url: https://github.com/openssl/openssl
+  doc_url: https://www.openssl.org/docs/man3.0/
+
+extra:
+  recipe-maintainers:
+    - open-ce/open-ce-dev-team 
